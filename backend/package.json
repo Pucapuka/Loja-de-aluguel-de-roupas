@@ -1,0 +1,36 @@
+{
+  "name": "loja-alugueis",
+  "version": "1.0.0",
+  "description": "Loja de alugueis de roupas e acessorios para eventos sociais de luxo",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pucapuka/Loja-de-aluguel-de-roupas.git"
+  },
+  "keywords": [
+    "loja",
+    "aluguel",
+    "roupas",
+    "fullstack"
+  ],
+  "author": "Paulo Anderson Gonçalves de Lima",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pucapuka/Loja-de-aluguel-de-roupas/issues"
+  },
+  "homepage": "https://github.com/Pucapuka/Loja-de-aluguel-de-roupas#readme",
+  "dependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.10",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}

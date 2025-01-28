@@ -1,0 +1,11 @@
+.env
+database.sqlite
+config.json
+node_modules/
+dist/
+build/
+*.log
+*.tmp
+*.bak
+**/temp/
+**/backup/
