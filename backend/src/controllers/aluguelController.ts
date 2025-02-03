@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { db } from '../services/db';
+import db from '../services/db';
 
 // Listar todos os aluguéis
 export const listarAlugueis = async (req: Request, res: Response) => {

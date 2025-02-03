@@ -1,11 +1,18 @@
 .env
-database.sqlite
+.env.test
+*.sqlite
+*.db
 config.json
 node_modules/
 dist/
 build/
 *.log
+*.cache
 *.tmp
 *.bak
 **/temp/
 **/backup/
+
+# Ignorar uploads ou arquivos grandes específicos
+uploads/
+dump.sql

@@ -1,0 +1,6 @@
+--criando o usuário e o banco de dados
+
+CREATE USER sobmedida WITH PASSWORD 'annalele';
+CREATE DATABASE loja_alugueis OWNER sobmedida;
+GRANT ALL PRIVILEGES ON DATABASE loja_alugueis TO sobmedida;
+

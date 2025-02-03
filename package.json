@@ -2,9 +2,10 @@
   "name": "loja-alugueis",
   "version": "1.0.0",
   "description": "Loja de alugueis de roupas e acessorios para eventos sociais de luxo",
-  "main": "index.js",
+  "main": "backend/src/app.ts",
   "scripts": {
-    "dev": "nodemon src/app.ts"
+    "dev": "ts-node-dev --respawn backend/src/server.ts",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -29,8 +30,18 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-validator": "^7.2.1",
     "pg": "^8.13.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/pg": "^8.11.11",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5"
   }
 }

@@ -17,4 +17,8 @@ app.use('/clientes', clienteRoutes);
 app.use('/produtos', produtoRoutes);
 app.use('/alugueis', aluguelRoutes);
 
+app.get('/', (req, res) =>{
+    res.send('API está rodando!');
+})
+
 export default app;
