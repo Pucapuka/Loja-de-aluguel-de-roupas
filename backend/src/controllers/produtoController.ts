@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
 import db from '../services/db';
 
 // ✅ Listar todos os produtos
-export const listarProdutos = async (req: Request, res: Response): Promise<Response> => {
+export const listarProdutos = async (req: Request, res: Response): Promise<void> => {
   try {
     const client = await db.connect();
     const result = await client.query('SELECT * FROM produtos');
     client.release();
-    return res.status(200).json(result.rows); // Retorna a resposta aqui
+    res.status(200).json(result.rows);
   } catch (err) {
-    return res.status(500).json({ error: 'Erro ao buscar produtos', details: err });
+    res.status(500).json({ error: 'Erro ao buscar produtos', details: err });
   }
 };
 
+
 // ✅ Obter um produto pelo ID
-export const obterProduto = async (req: Request, res: Response): Promise<Response> => {
+export const obterProduto = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
@@ -24,84 +24,60 @@ export const obterProduto = async (req: Request, res: Response): Promise<Respons
     client.release();
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      res.status(404).json({ error: 'Produto não encontrado' });
+      return;
     }
 
-    return res.status(200).json(result.rows[0]); // Retorna a resposta aqui
+    res.status(200).json(result.rows[0]);
   } catch (err) {
-    return res.status(500).json({ error: 'Erro ao buscar produto', details: err });
+    res.status(500).json({ error: 'Erro ao buscar produto', details: err });
   }
 };
 
 // ✅ Criar um novo produto
-export const criarProduto = [
-  // Validações dos campos
-  body('nome').notEmpty().withMessage('Nome é obrigatório'),
-  body('preco').isNumeric().withMessage('Preço deve ser um número válido'),
-  body('quantidade').isNumeric().withMessage('Quantidade deve ser um número válido'),
+export const criarProduto = async (req: Request, res: Response): Promise<void> => {
+  const { tipo, tamanho, cor, preco, disponibilidade } = req.body;
 
-  // Função de criação
-  async (req: Request, res: Response): Promise<Response> => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() }); // Retorna a resposta aqui
-    }
+  try {
+    const client = await db.connect();
+    const query = 'INSERT INTO produtos (tipo, tamanho, cor, preco, disponibilidade) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+    const values = [tipo, tamanho, cor, preco, disponibilidade];
 
-    const { nome, descricao, preco, quantidade } = req.body;
+    const result = await client.query(query, values);
+    client.release();
 
-    try {
-      const client = await db.connect();
-      const query = 'INSERT INTO produtos (nome, descricao, preco, quantidade) VALUES ($1, $2, $3, $4) RETURNING *';
-      const values = [nome, descricao, preco, quantidade];
-
-      const result = await client.query(query, values);
-      client.release();
-
-      return res.status(201).json(result.rows[0]); // Retorna a resposta aqui
-    } catch (err) {
-      return res.status(500).json({ error: 'Erro ao criar produto', details: err });
-    }
-  },
-];
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao criar produto', details: err });
+  }
+};
 
 // ✅ Atualizar um produto pelo ID
-export const atualizarProduto = [
-  // Validações dos campos
-  body('nome').optional().notEmpty().withMessage('Nome não pode estar vazio'),
-  body('preco').optional().isNumeric().withMessage('Preço deve ser um número válido'),
-  body('quantidade').optional().isNumeric().withMessage('Quantidade deve ser um número válido'),
+export const atualizarProduto = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { tipo, tamanho, cor, preco, disponibilidade } = req.body;
 
-  // Função de atualização
-  async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-    const { nome, descricao, preco, quantidade } = req.body;
+  try {
+    const client = await db.connect();
+    const query = 'UPDATE produtos SET tipo = $1, tamanho = $2, cor = $3, preco= $4, disponibilidade = $5 WHERE id = $6 RETURNING *';
+    const values = [tipo, tamanho, cor, preco, disponibilidade, id];
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() }); // Retorna a resposta aqui
+    const result = await client.query(query, values);
+    client.release();
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'Produto não encontrado' });
+      return;
     }
 
-    try {
-      const client = await db.connect();
-      const query = 'UPDATE produtos SET nome = $1, descricao = $2, preco = $3, quantidade = $4 WHERE id = $5 RETURNING *';
-      const values = [nome, descricao, preco, quantidade, id];
-
-      const result = await client.query(query, values);
-      client.release();
-
-      if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'Produto não encontrado' });
-      }
-
-      return res.status(200).json(result.rows[0]); // Retorna a resposta aqui
-    } catch (err) {
-      return res.status(500).json({ error: 'Erro ao atualizar produto', details: err });
-    }
-  },
-];
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao atualizar produto', details: err });
+  }
+};
 
 // ✅ Excluir um produto pelo ID
-export const excluirProduto = async (req: Request, res: Response): Promise<Response> => {
+export const excluirProduto = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
@@ -111,11 +87,12 @@ export const excluirProduto = async (req: Request, res: Response): Promise<Respo
     client.release();
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      res.status(404).json({ error: 'Produto não encontrado' });
+      return;
     }
 
-    return res.status(200).json({ message: 'Produto excluído com sucesso' }); // Retorna a resposta aqui
+    res.status(200).json({ message: 'Produto excluído com sucesso' });
   } catch (err) {
-    return res.status(500).json({ error: 'Erro ao excluir produto', details: err });
+    res.status(500).json({ error: 'Erro ao excluir produto', details: err });
   }
 };

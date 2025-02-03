@@ -3,11 +3,10 @@ import { listarProdutos, obterProduto, criarProduto, atualizarProduto, excluirPr
 
 const router = Router();
 
-// Rotas
-router.get('/produtos', listarProdutos);
-router.get('/produtos/:id', obterProduto); // ❗ Adicionada a rota para obter um produto pelo ID
-router.post('/produtos', criarProduto);
-router.put('/produtos/:id', atualizarProduto);
-router.delete('/produtos/:id', excluirProduto); // ❗ Corrigido o nome da função
+router.get('/', listarProdutos);
+router.get('/:id', obterProduto);
+router.post('/', criarProduto);
+router.put('/:id', atualizarProduto);
+router.delete('/:id', excluirProduto);
 
 export default router;
