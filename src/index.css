@@ -1,0 +1,197 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+body {
+  background-color: theme('colors.gray.100');
+  color: theme('colors.gray.900');
+  font-family: theme('fontFamily.sans');
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h3, h4, h5, h6 {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+/* Components */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  transition-property: background-color, color;
+  transition-duration: 200ms;
+}
+
+.btn-primary {
+  background-color: #3B82F6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2563EB;
+}
+
+.btn-primary:active {
+  background-color: #1D4ED8;
+}
+
+.btn-secondary {
+  background-color: #E5E7EB;
+  color: #1F2937;
+}
+
+.btn-secondary:hover {
+  background-color: #D1D5DB;
+}
+
+.btn-secondary:active {
+  background-color: #9CA3AF;
+}
+
+.btn-danger {
+  background-color: #EF4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #DC2626;
+}
+
+.btn-danger:active {
+  background-color: #B91C1C;
+}
+
+.btn-warning {
+  background-color: #FBBF24;
+  color: #1F2937;
+}
+
+.btn-warning:hover {
+  background-color: #F59E0B;
+}
+
+.btn-warning:active {
+  background-color: #D97706;
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  transition-property: all;
+  transition-duration: 200ms;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #60A5FA;
+}
+
+.form-select {
+  width: 100%;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  transition-property: all;
+  transition-duration: 200ms;
+  appearance: none;
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #60A5FA;
+}
+
+.link {
+  color: #2563EB;
+  text-decoration: none;
+  transition: color 200ms;
+}
+
+.link:hover {
+  color: #1D4ED8;
+}
+
+/* Utilities */
+.container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 200ms;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.message {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.message-success {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.message-error {
+  background-color: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid #E5E7EB;
+  transition: background-color 200ms;
+}
+
+.table-row:hover {
+  background-color: #F9FAFB;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+}

@@ -1,18 +1,67 @@
-.env
-.env.test
-*.sqlite
-*.db
-config.json
+# Dependências
 node_modules/
+.npm
+.pnpm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Arquivos de build
 dist/
 build/
-*.log
-*.cache
-*.tmp
-*.bak
-**/temp/
-**/backup/
+out/
+*.tsbuildinfo
 
-# Ignorar uploads ou arquivos grandes específicos
-uploads/
-dump.sql
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Arquivos grandes/binary
+*.exe
+*.dll
+*.so
+*.dylib
+electron
+
+# Cache
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+
+# Temporary folders
+tmp/
+temp/
