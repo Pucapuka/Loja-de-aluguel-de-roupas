@@ -5,27 +5,48 @@ Desenvolvido para ambiente Linux (dist. Debian), usando tecnologias para desenvo
 
 lojaDeRoupas
 ├── backend
-│   ├── database
-│   │   ├── databaseCode.txt
-│   │   ├── loja.db
-│   │   └── setup.sql
-│   ├── db.js
-│   ├── routes
-│   │   ├── alugueis.js
-│   │   ├── clientes.js
-│   │   └── roupas.js
-│   └── server.js
-├── criar-pacote.sh
+│   ├── database
+│   │   ├── databaseCode.txt
+│   │   ├── loja.db
+│   │   └── setup.sql
+│   ├── routes
+│   │   ├── alugueis.js
+│   │   ├── clientes.js
+│   │   └── roupas.js
+│   ├── db.js
+│   └── server.js
 ├── debian
-│   ├── changelog
-│   ├── control
-│   ├── postinst
-│   └── prerm
-├── electron.js
+│   ├── changelog
+│   ├── control
+│   ├── postinst
+│   └── prerm
 ├── instaladores
-│   ├── criar-appimage.sh
-│   ├── criar-deb.sh
-│   └── instalar-gui.sh
+│   ├── criar-appimage.sh
+│   ├── criar-deb.sh
+│   └── instalar-gui.sh
+├── public
+│   ├── bundle.js
+│   ├── bundle.js.LICENSE.txt
+│   └── index.html
+├── scripts
+├── src
+│   ├── components
+│   │   ├── Alugueis
+│   │   ├── Clientes
+│   │   ├── Layout
+│   │   └── Roupas
+│   ├── services
+│   │   └── api.js
+│   ├── App.jsx
+│   ├── index.css
+│   └── index.js
+├── usr
+│   ├── local
+│   │   └── loja-roupas
+│   └── share
+│       └── applications
+├── criar-pacote.sh
+├── electron.js
 ├── install.sh
 ├── jest.config.js
 ├── jest.setup.js
@@ -33,39 +54,9 @@ lojaDeRoupas
 ├── package.json
 ├── package-lock.json
 ├── postcss.config.js
-├── public
-│   ├── bundle.js
-│   ├── bundle.js.LICENSE.txt
-│   └── index.html
 ├── README.md
 ├── Requisitos.md
-├── scripts
-├── src
-│   ├── App.jsx
-│   ├── components
-│   │   ├── Alugueis
-│   │   │   ├── FormAlugueis.jsx
-│   │   │   └── ListaAlugueis.jsx
-│   │   ├── Clientes
-│   │   │   ├── FormClientes.jsx
-│   │   │   └── ListaClientes.jsx
-│   │   ├── Layout
-│   │   │   └── NavBar.jsx
-│   │   └── Roupas
-│   │       ├── FormRoupas.jsx
-│   │       └── ListaRoupas.jsx
-│   ├── index.css
-│   ├── index.js
-│   └── services
-│       └── api.js
 ├── tailwind.config.js
-├── tsconfig.json
-├── usr
-│   ├── local
-│   │   └── loja-roupas
-│   │       └── iniciar-loja.sh
-│   └── share
-│       └── applications
 └── webpack.config.js
 
 
