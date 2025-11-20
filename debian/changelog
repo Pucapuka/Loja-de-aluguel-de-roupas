@@ -1,0 +1,8 @@
+loja-roupas (1.0.0) stable; urgency=medium
+
+  * Versão inicial do sistema
+  - Cadastro de roupas, clientes e aluguéis
+  - Interface Electron + React
+  - Banco SQLite local
+
+ -- Paulo Anderson <solucoes.magic.ti@gmail.com>  Tue, 01 Jan 2024 12:00:00 -0300

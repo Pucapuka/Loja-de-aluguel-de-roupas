@@ -4,7 +4,8 @@
   "description": "Aplicativo desktop de aluguel de roupas (Electron + React + Express + SQLite)",
   "main": "electron.js",
   "scripts": {
-    "start": "concurrently \"npm run backend\" \"npm run react\" \"npm run electron\"",
+    "start": "node backend/server.js & npx electron --no-sandbox .",
+    "dev": "concurrently \"npm run backend\" \"npm run react\" \"npm run electron\"",
     "backend": "node --watch backend/server.js",
     "react": "webpack serve --mode development --port 3000 --open",
     "electron": "wait-on http://localhost:3000 && electron .",
@@ -14,7 +15,7 @@
     "axios": "^1.7.0",
     "concurrently": "^8.2.0",
     "cors": "^2.8.5",
-    "electron": "^39.0.0",
+    "electron": "^22.0.0",
     "express": "^4.19.2",
     "git": "^0.1.5",
     "react": "^18.3.1",

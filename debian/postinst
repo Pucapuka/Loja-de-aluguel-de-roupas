@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Script de pós-instalação para loja-roupas
+
+case "$1" in
+    configure)
+        echo "Configurando Loja de Roupas..."
+        
+        # Configurar permissões
+        chown -R $SUDO_USER:$SUDO_USER /usr/local/loja-roupas
+        chmod -R 755 /usr/local/loja-roupas
+        
+        # Criar diretório de dados do usuário
+        if [ -n "$SUDO_USER" ]; then
+            USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+            mkdir -p "$USER_HOME/.loja-roupas"
+            chown "$SUDO_USER:$SUDO_USER" "$USER_HOME/.loja-roupas"
+        fi
+
+        # Instalar dependências
+        echo "Instalando dependências Node.js..."
+        cd /usr/local/loja-roupas
+        
+        # Verificar se package.json existe
+        if [ ! -f "package.json" ]; then
+            echo "❌ Erro: package.json não encontrado"
+            exit 1
+        fi
+        
+        npm install --no-audit --no-fund
+
+        # Compilar Tailwind CSS se os arquivos existirem
+        echo "Compilando Tailwind CSS..."
+        if [ -f "src/input.css" ] && [ -f "tailwind.config.js" ]; then
+            npx tailwindcss -i ./src/input.css -o ./public/output.css --minify
+            echo "✅ Tailwind CSS compilado"
+        else
+            echo "⚠️  Arquivos do Tailwind não encontrados, pulando compilação"
+        fi
+
+        # Fazer build de produção
+        echo "Compilando aplicação React..."
+        npx webpack --mode production
+
+        echo "✅ Loja de Roupas configurado com sucesso!"
+        ;;
+esac
+
+exit 0

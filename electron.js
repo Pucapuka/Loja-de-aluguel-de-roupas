@@ -9,13 +9,20 @@ function createWindow() {
     webPreferences: { nodeIntegration: true },
   });
 
-  win.loadURL('http://localhost:3000');
+  // Em desenvolvimento: localhost:3000, em produção: arquivo local
+  const isDev = process.env.NODE_ENV === 'development';
+  if (isDev) {
+    win.loadURL('http://localhost:3000');
+  } else {
+    win.loadFile('public/index.html');
+  }
 }
 
 app.whenReady().then(() => {
-  // Inicia o backend Express
-  spawn('node', ['backend/server.js'], { shell: true, stdio: 'inherit' });
-
-  // Cria janela principal
+  // Em produção, não inicia o backend separadamente (já está no npm start)
+  if (process.env.NODE_ENV !== 'production') {
+    spawn('node', ['backend/server.js'], { shell: true, stdio: 'inherit' });
+  }
+  
   createWindow();
 });
