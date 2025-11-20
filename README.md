@@ -2,7 +2,7 @@
 Desenvolvido para ambiente Linux (dist. Debian), usando tecnologias para desenvolvimento web, com pacotes de instaladores e builders. Essa estrutura já foi testada e consegue gerar um instalável para SO Linux debian.
 
 ## Estrutura do aplicativo
-
+```bash
 lojaDeRoupas
 ├── backend
 │   ├── database
@@ -58,7 +58,7 @@ lojaDeRoupas
 ├── Requisitos.md
 ├── tailwind.config.js
 └── webpack.config.js
-
+```
 
 ## Descrição
 
