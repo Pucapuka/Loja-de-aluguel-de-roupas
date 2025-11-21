@@ -4,7 +4,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   module: {
   rules: [
@@ -26,6 +27,12 @@ module.exports = {
 },
 resolve: {
   extensions: [".js", ".jsx"]
-}
+},
+devServer: {
+    historyApiFallback: true,
+    port: 3000,
+    hot: true,
+    open: true // O Electron vai abrir, não precisa do navegador
+  }
 
 };

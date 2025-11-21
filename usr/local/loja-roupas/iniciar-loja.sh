@@ -1,16 +1,13 @@
 #!/bin/bash
 cd /usr/local/loja-roupas
 
-# Limpar processos
+# Limpar variáveis problemáticas
+unset NODE_OPTIONS
+
+# Matar processos antigos
 pkill -f "node.*server.js" || true
 pkill -f "electron" || true
-sleep 3
+sleep 2
 
-# Configurar
-unset NODE_OPTIONS
-export ELECTRON_DISABLE_SANDBOX=1
-
-mkdir -p "$HOME/.loja-roupas"
 echo "Iniciando Loja de Roupas..."
-
 npm start

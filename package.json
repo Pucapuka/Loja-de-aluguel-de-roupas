@@ -3,18 +3,21 @@
   "version": "1.0.0",
   "description": "Aplicativo desktop de aluguel de roupas (Electron + React + Express + SQLite)",
   "main": "electron.js",
+  
   "scripts": {
-    "start": "node backend/server.js & npx electron --no-sandbox .",
+    "start": "unset NODE_OPTIONS && npm run build && node backend/server.js & sleep 5 && npx electron --no-sandbox electron.js",
     "dev": "concurrently \"npm run backend\" \"npm run react\" \"npm run electron\"",
-    "backend": "node --watch backend/server.js",
+    "backend": "node backend/server.js",
     "react": "webpack serve --mode development --port 3000 --open",
-    "electron": "wait-on http://localhost:3000 && electron .",
-    "build": "webpack --mode production"
+    "electron": "wait-on http://localhost:3000 && cross-env NODE_OPTIONS=\"\" electron .",
+    "build": "webpack --mode production",
+    "clean": "pkill -f node && pkill -f electron"
   },
   "dependencies": {
     "axios": "^1.7.0",
     "concurrently": "^8.2.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "electron": "^22.0.0",
     "express": "^4.19.2",
     "git": "^0.1.5",
@@ -29,6 +32,7 @@
     "@babel/preset-react": "^7.25.0",
     "autoprefixer": "^10.4.21",
     "babel-loader": "^9.2.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
