@@ -10,6 +10,7 @@ export default function FormProdutos({ onSave, editar }) {
     estoque: 0,
   });
   const [mensagem, setMensagem] = useState(null);
+  const [enviando, setEnviando] = useState(false);
 
   // Gerar código automático se for novo produto
   useEffect(() => {
@@ -46,6 +47,20 @@ export default function FormProdutos({ onSave, editar }) {
       return;
     }
 
+    // Validação do preço
+    if (form.preco_aluguel && parseFloat(form.preco_aluguel) < 0) {
+      setMensagem({ tipo: "error", texto: "O preço não pode ser negativo!" });
+      return;
+    }
+
+    // Validação do estoque
+    if (form.estoque < 0) {
+      setMensagem({ tipo: "error", texto: "O estoque não pode ser negativo!" });
+      return;
+    }
+
+    setEnviando(true);
+
     try {
       const res = await fetch(
         editar ? `http://localhost:5000/api/produtos/${editar.id}` : "http://localhost:5000/api/produtos",
@@ -67,20 +82,28 @@ export default function FormProdutos({ onSave, editar }) {
 
       setMensagem({ 
         tipo: "success", 
-        texto: editar ? "Produto atualizado!" : "Produto cadastrado!" 
+        texto: editar ? "Produto atualizado com sucesso!" : "Produto cadastrado com sucesso!" 
       });
-      setForm({ 
-        codigo: "", 
-        nome: "", 
-        tamanho: "", 
-        cor: "", 
-        preco_aluguel: "", 
-        estoque: 0 
-      });
+      
+      // Limpar formulário apenas se for um novo produto
+      if (!editar) {
+        setForm({ 
+          codigo: "", 
+          nome: "", 
+          tamanho: "", 
+          cor: "", 
+          preco_aluguel: "", 
+          estoque: 0 
+        });
+      }
+      
       onSave();
     } catch (err) {
       setMensagem({ tipo: "error", texto: err.message });
+    } finally {
+      setEnviando(false);
     }
+    
     setTimeout(() => setMensagem(null), 3000);
   };
 
@@ -152,6 +175,7 @@ export default function FormProdutos({ onSave, editar }) {
           </label>
           <input 
             name="cor" 
+            placeholder="Ex: Preto, Vermelho, Azul Marinho"
             value={form.cor} 
             onChange={handleChange} 
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -191,6 +215,21 @@ export default function FormProdutos({ onSave, editar }) {
             className="border border-gray-300 p-2 pl-10 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
           />
         </div>
+      </div>
+
+      {/* BOTÃO DE SUBMIT - ADICIONADO */}
+      <div className="flex justify-end pt-4">
+        <button 
+          type="submit"
+          disabled={enviando}
+          className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+            enviando 
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+          }`}
+        >
+          {enviando ? 'Salvando...' : (editar ? 'Atualizar Produto' : 'Cadastrar Produto')}
+        </button>
       </div>
     </form>
   );
