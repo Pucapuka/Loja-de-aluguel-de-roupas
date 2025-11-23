@@ -1,7 +1,7 @@
 const db = require('../db');
 
 const aluguelController = {
-    // Listar todos os aluguéis - QUERY CORRIGIDA
+    // Listar todos os aluguéis
     listarAlugueis: (req, res) => {
         const sql = `
             SELECT 
@@ -48,17 +48,17 @@ const aluguelController = {
 
     // Adicionar item ao aluguel
     adicionarItem: (req, res) => {
-        const { aluguel_id, roupa_id, quantidade, valor_unitario } = req.body;
+        const { aluguel_id, produto_id, quantidade, valor_unitario } = req.body;
         
-        if (!aluguel_id || !roupa_id || !quantidade || !valor_unitario) {
+        if (!aluguel_id || !produto_id || !quantidade || !valor_unitario) {
             return res.status(400).json({ error: 'Dados incompletos' });
         }
 
         const total_parcial = quantidade * valor_unitario;
-        const sql = `INSERT INTO aluguel_itens (aluguel_id, roupa_id, quantidade, valor_unitario, total_parcial) 
+        const sql = `INSERT INTO aluguel_itens (aluguel_id, produto_id, quantidade, valor_unitario, total_parcial) 
                      VALUES (?, ?, ?, ?, ?)`;
         
-        db.run(sql, [aluguel_id, roupa_id, quantidade, valor_unitario, total_parcial], function(err) {
+        db.run(sql, [aluguel_id, produto_id, quantidade, valor_unitario, total_parcial], function(err) {
             if (err) {
                 console.error('❌ Erro ao adicionar item:', err.message);
                 return res.status(500).json({ error: err.message });
@@ -88,17 +88,17 @@ const aluguelController = {
                 c.nome as cliente_nome,
                 c.telefone as cliente_telefone,
                 ai.id as item_id,
-                ai.roupa_id,
+                ai.produto_id,
                 ai.quantidade,
                 ai.valor_unitario,
                 ai.total_parcial,
-                r.nome as roupa_nome,
-                r.tamanho,
-                r.cor
+                p.nome as produto_nome,
+                p.tamanho,
+                p.cor
             FROM alugueis a
             LEFT JOIN clientes c ON a.cliente_id = c.id
             LEFT JOIN aluguel_itens ai ON a.id = ai.aluguel_id
-            LEFT JOIN roupas r ON ai.roupa_id = r.id
+            LEFT JOIN produtos p ON ai.produto_id = p.id
             WHERE a.id = ?
         `;
         
@@ -178,4 +178,4 @@ const aluguelController = {
     }
 };
 
-module.exports = aluguelController; 
+module.exports = aluguelController;

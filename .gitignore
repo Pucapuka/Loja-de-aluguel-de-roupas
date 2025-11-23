@@ -65,3 +65,7 @@ electron
 # Temporary folders
 tmp/
 temp/
+
+#personal files
+anotações.md
+

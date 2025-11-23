@@ -8,19 +8,19 @@ export default function FormAlugueis({ onSave, editar }) {
   });
   const [itens, setItens] = useState([]);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
-  const [roupaSelecionada, setRoupaSelecionada] = useState(null);
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [quantidade, setQuantidade] = useState(1);
   const [clientes, setClientes] = useState([]);
-  const [roupas, setRoupas] = useState([]);
+  const [produtos, setProdutos] = useState([]); // CORREÇÃO: mudado de "setprodutos" para "setProdutos"
   const [mensagem, setMensagem] = useState(null);
   const [aluguelId, setAluguelId] = useState(null);
 
   useEffect(() => {
     const carregar = async () => {
       const resC = await fetch("http://localhost:5000/api/clientes");
-      const resR = await fetch("http://localhost:5000/api/roupas");
+      const resR = await fetch("http://localhost:5000/api/produtos");
       setClientes(await resC.json());
-      setRoupas(await resR.json());
+      setProdutos(await resR.json()); // CORREÇÃO: mudado de "setprodutos" para "setProdutos"
     };
     carregar();
   }, []);
@@ -58,33 +58,34 @@ export default function FormAlugueis({ onSave, editar }) {
     }
   };
 
-  const handleSelecionarRoupa = (e) => {
-    const roupaId = parseInt(e.target.value);
-    const roupa = roupas.find(r => r.id === roupaId);
-    setRoupaSelecionada(roupa);
+  const handleSelecionarProduto = (e) => {
+    const produtoId = parseInt(e.target.value);
+    const produto = produtos.find(p => p.id === produtoId); // CORREÇÃO: mudado de "produtos" para "produtos"
+    setProdutoSelecionado(produto);
   };
 
   const adicionarItem = () => {
-    if (!roupaSelecionada) {
-      setMensagem({ tipo: "error", texto: "Selecione uma roupa!" });
+    if (!produtoSelecionado) {
+      setMensagem({ tipo: "error", texto: "Selecione um produto!" });
       return;
     }
 
-    if (roupaSelecionada.status !== "disponível") {
-      setMensagem({ tipo: "error", texto: "Roupa não disponível!" });
+    // Verificar se há estoque disponível
+    if (produtoSelecionado.estoque < quantidade) {
+      setMensagem({ tipo: "error", texto: "Estoque insuficiente!" });
       return;
     }
 
     const novoItem = {
-      roupa_id: roupaSelecionada.id,
-      roupa_nome: roupaSelecionada.nome,
+      produto_id: produtoSelecionado.id,
+      produto_nome: produtoSelecionado.nome,
       quantidade: quantidade,
-      valor_unitario: roupaSelecionada.preco_aluguel,
-      total_parcial: quantidade * roupaSelecionada.preco_aluguel
+      valor_unitario: produtoSelecionado.preco_aluguel,
+      total_parcial: quantidade * produtoSelecionado.preco_aluguel
     };
 
     setItens([...itens, novoItem]);
-    setRoupaSelecionada(null);
+    setProdutoSelecionado(null);
     setQuantidade(1);
     setMensagem({ tipo: "success", texto: "Item adicionado!" });
     setTimeout(() => setMensagem(null), 2000);
@@ -127,7 +128,7 @@ export default function FormAlugueis({ onSave, editar }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             aluguel_id: aluguelIdAtual,
-            roupa_id: item.roupa_id,
+            produto_id: item.produto_id,
             quantidade: item.quantidade,
             valor_unitario: item.valor_unitario
           })
@@ -135,15 +136,18 @@ export default function FormAlugueis({ onSave, editar }) {
 
         if (!resItem.ok) throw new Error("Erro ao adicionar item");
 
-        // Atualiza status da roupa
-        await fetch(`http://localhost:5000/api/roupas/${item.roupa_id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            ...roupas.find(r => r.id === item.roupa_id), 
-            status: "alugado" 
-          }),
-        });
+        // Atualiza estoque do produto
+        const produto = produtos.find(p => p.id === item.produto_id);
+        if (produto) {
+          await fetch(`http://localhost:5000/api/produtos/${item.produto_id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              ...produto,
+              estoque: produto.estoque - item.quantidade
+            }),
+          });
+        }
       }
 
       setMensagem({ tipo: "success", texto: editar ? "Aluguel atualizado!" : "Aluguel registrado!" });
@@ -181,11 +185,11 @@ export default function FormAlugueis({ onSave, editar }) {
       <div className="border-t pt-4">
         <h3 className="font-bold mb-2">Adicionar Itens</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-          <select value={roupaSelecionada?.id || ""} onChange={handleSelecionarRoupa} className="border p-2 rounded">
-            <option value="">Selecione a roupa</option>
-            {roupas.filter(r => r.status === "disponível").map(r => (
-              <option key={r.id} value={r.id}>
-                {r.nome} - R$ {r.preco_aluguel}
+          <select value={produtoSelecionado?.id || ""} onChange={handleSelecionarProduto} className="border p-2 rounded">
+            <option value="">Selecione o produto</option>
+            {produtos.filter(p => p.estoque > 0).map(p => ( // CORREÇÃO: mudado de "produtos" para "produtos"
+              <option key={p.id} value={p.id}>
+                {p.nome} - R$ {p.preco_aluguel} (Estoque: {p.estoque})
               </option>
             ))}
           </select>
@@ -200,7 +204,7 @@ export default function FormAlugueis({ onSave, editar }) {
           />
           
           <div className="p-2 bg-white rounded border">
-            {roupaSelecionada ? `R$ ${(roupaSelecionada.preco_aluguel * quantidade).toFixed(2)}` : "R$ 0.00"}
+            {produtoSelecionado ? `R$ ${(produtoSelecionado.preco_aluguel * quantidade).toFixed(2)}` : "R$ 0.00"}
           </div>
           
           <button type="button" onClick={adicionarItem} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
@@ -216,7 +220,7 @@ export default function FormAlugueis({ onSave, editar }) {
           <div className="space-y-2">
             {itens.map((item, index) => (
               <div key={index} className="flex justify-between items-center p-2 bg-white rounded border">
-                <span>{item.roupa_nome} - {item.quantidade} x R$ {item.valor_unitario}</span>
+                <span>{item.produto_nome} - {item.quantidade} x R$ {item.valor_unitario}</span>
                 <div className="flex items-center gap-4">
                   <span className="font-bold">R$ {item.total_parcial.toFixed(2)}</span>
                   <button 

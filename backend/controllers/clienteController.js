@@ -4,19 +4,19 @@ const clienteController = {
     // Listar clientes
     listarClientes: (req, res) => {
         db.all('SELECT * FROM clientes ORDER BY nome', [], (err, rows) => {
-            if (err) return res.status(500).json(err);
+            if (err) return res.status(500).json({ error: err.message });
             res.json(rows);
         });
     },
 
     // Criar cliente
     criarCliente: (req, res) => {
-        const { nome, telefone, email, endereco } = req.body;
+        const { nome, cpf, telefone, email, endereco } = req.body;
         db.run(
-            'INSERT INTO clientes (nome, telefone, email, endereco) VALUES (?, ?, ?, ?)',
-            [nome, telefone, email, endereco],
+            'INSERT INTO clientes (nome, cpf, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)',
+            [nome, cpf, telefone, email, endereco],
             function(err) {
-                if (err) return res.status(500).json(err);
+                if (err) return res.status(500).json({ error: err.message });
                 res.json({ id: this.lastID });
             }
         );
@@ -25,12 +25,12 @@ const clienteController = {
     // Atualizar cliente
     atualizarCliente: (req, res) => {
         const { id } = req.params;
-        const { nome, telefone, email, endereco } = req.body;
+        const { nome, cpf, telefone, email, endereco } = req.body;
         db.run(
-            'UPDATE clientes SET nome=?, telefone=?, email=?, endereco=? WHERE id=?',
-            [nome, telefone, email, endereco, id],
+            'UPDATE clientes SET nome=?, cpf=?, telefone=?, email=?, endereco=? WHERE id=?',
+            [nome, cpf, telefone, email, endereco, id],
             function(err) {
-                if (err) return res.status(500).json(err);
+                if (err) return res.status(500).json({ error: err.message });
                 res.json({ changes: this.changes });
             }
         );
@@ -40,7 +40,7 @@ const clienteController = {
     deletarCliente: (req, res) => {
         const { id } = req.params;
         db.run('DELETE FROM clientes WHERE id=?', [id], function(err) {
-            if (err) return res.status(500).json(err);
+            if (err) return res.status(500).json({ error: err.message });
             res.json({ changes: this.changes });
         });
     }

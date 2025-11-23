@@ -12,6 +12,8 @@ export default function ListaAlugueis() {
     try {
       setCarregando(true);
       setErro(null);
+      
+      console.log('🔄 Tentando conectar com a API...');
       const res = await fetch("http://localhost:5000/api/alugueis");
       
       if (!res.ok) {
@@ -19,8 +21,8 @@ export default function ListaAlugueis() {
       }
       
       const data = await res.json();
+      console.log('✅ Dados recebidos:', data);
       
-      // Garante que data seja um array
       if (Array.isArray(data)) {
         setAlugueis(data);
       } else {
@@ -28,8 +30,8 @@ export default function ListaAlugueis() {
         setAlugueis([]);
       }
     } catch (err) {
-      console.error('Erro ao carregar aluguéis:', err);
-      setErro(err.message);
+      console.error('❌ Erro ao carregar aluguéis:', err);
+      setErro(`Falha na conexão: ${err.message}. Verifique se o servidor está rodando na porta 5000.`);
       setAlugueis([]);
     } finally {
       setCarregando(false);
@@ -112,23 +114,45 @@ export default function ListaAlugueis() {
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">📦 Aluguéis</h2>
       
-      {/* Botão de debug */}
+      {/* Botão de debug
       <button 
         onClick={verificarAPI}
         className="mb-4 bg-gray-500 text-white px-3 py-1 rounded text-sm"
       >
         Debug API
-      </button>
-
+      </button> */}
+      {!erro && (
       <FormAlugueis 
         onSave={editarAluguel ? handleSalvarEdicao : carregar} 
         editar={editarAluguel} 
       />
-      
+      )}
       {/* Estados de loading e erro */}
       {carregando && (
         <div className="mt-4 p-4 bg-blue-100 text-blue-800 rounded">
           Carregando aluguéis...
+        </div>
+      )}
+
+       {/* Mensagem de erro detalhada */}
+      {erro && (
+        <div className="mt-4 p-4 bg-red-100 text-red-800 rounded border border-red-300">
+          <div className="font-bold mb-2">❌ Erro de Conexão</div>
+          <div className="mb-3">{erro}</div>
+          <div className="text-sm text-red-600 mb-2">
+            Para resolver:
+            <ul className="list-disc list-inside mt-1">
+              <li>Verifique se o servidor backend está rodando</li>
+              <li>Execute: <code className="bg-gray-200 px-1">node backend/server.js</code></li>
+              <li>Confirme se a porta 5000 está livre</li>
+            </ul>
+          </div>
+          <button 
+            onClick={carregar}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            🔄 Tentar Novamente
+          </button>
         </div>
       )}
       
