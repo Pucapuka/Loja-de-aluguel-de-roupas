@@ -107,8 +107,6 @@ export default function FormProdutos({ onSave, editar }) {
     setTimeout(() => setMensagem(null), 3000);
   };
 
-  const tamanhos = ["PP", "P", "M", "G", "GG", "XG", "Único"];
-
   return (
     <form id="form-produtos" onSubmit={handleSubmit} className="p-6 space-y-4 bg-white rounded-lg shadow-md border">
       {mensagem && (
@@ -156,17 +154,13 @@ export default function FormProdutos({ onSave, editar }) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Tamanho
           </label>
-          <select 
+          <input 
             name="tamanho" 
+            placeholder="Ex.: 32-34 ou 36-38"
             value={form.tamanho} 
             onChange={handleChange} 
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">Selecione o tamanho</option>
-            {tamanhos.map(tamanho => (
-              <option key={tamanho} value={tamanho}>{tamanho}</option>
-            ))}
-          </select>
+          />
         </div>
 
         <div>

@@ -175,6 +175,136 @@ const aluguelController = {
             console.log(`✅ Aluguel ${id} deletado`);
             res.json({ changes: this.changes });
         });
+    }, // ⬅️ AQUI FALTOU ESTA VÍRGULA!
+
+    // Obter aluguel completo com itens E pagamentos
+    obterAluguelCompleto: (req, res) => {
+        const { id } = req.params;
+        
+        // Buscar dados do aluguel e itens
+        const sqlAluguel = `
+            SELECT 
+                a.*,
+                c.nome as cliente_nome,
+                c.telefone as cliente_telefone,
+                ai.id as item_id,
+                ai.produto_id,
+                ai.quantidade,
+                ai.valor_unitario,
+                ai.total_parcial,
+                p.nome as produto_nome,
+                p.tamanho,
+                p.cor
+            FROM alugueis a
+            LEFT JOIN clientes c ON a.cliente_id = c.id
+            LEFT JOIN aluguel_itens ai ON a.id = ai.aluguel_id
+            LEFT JOIN produtos p ON ai.produto_id = p.id
+            WHERE a.id = ?
+        `;
+        
+        // Buscar pagamentos
+        const sqlPagamentos = `SELECT * FROM pagamentos WHERE aluguel_id = ? ORDER BY data_vencimento ASC`;
+        
+        db.all(sqlAluguel, [id], (err, aluguelRows) => {
+            if (err) {
+                console.error('❌ Erro ao buscar aluguel:', err.message);
+                return res.status(500).json({ error: err.message });
+            }
+            
+            if (aluguelRows.length === 0) {
+                return res.status(404).json({ error: 'Aluguel não encontrado' });
+            }
+            
+            // Buscar pagamentos
+            db.all(sqlPagamentos, [id], (err, pagamentoRows) => {
+                if (err) {
+                    console.error('❌ Erro ao buscar pagamentos:', err.message);
+                    return res.status(500).json({ error: err.message });
+                }
+                
+                // Estruturar resposta
+                const aluguel = {
+                    id: aluguelRows[0].id,
+                    cliente_id: aluguelRows[0].cliente_id,
+                    cliente_nome: aluguelRows[0].cliente_nome,
+                    cliente_telefone: aluguelRows[0].cliente_telefone,
+                    data_inicio: aluguelRows[0].data_inicio,
+                    data_fim: aluguelRows[0].data_fim,
+                    valor_total: aluguelRows[0].valor_total,
+                    status: aluguelRows[0].status,
+                    itens: aluguelRows.filter(row => row.item_id).map(row => ({
+                        id: row.item_id,
+                        produto_id: row.produto_id,
+                        produto_nome: row.produto_nome,
+                        tamanho: row.tamanho,
+                        cor: row.cor,
+                        quantidade: row.quantidade,
+                        valor_unitario: row.valor_unitario,
+                        total_parcial: row.total_parcial
+                    })),
+                    pagamentos: pagamentoRows
+                };
+                
+                console.log(`✅ Aluguel ${id} carregado com ${aluguel.itens.length} itens e ${pagamentoRows.length} pagamentos`);
+                res.json(aluguel);
+            });
+        });
+    },
+
+    // Criar parcelas automáticas (opcional)
+    criarParcelas: (req, res) => {
+        const { aluguel_id, numero_parcelas, primeira_vencimento } = req.body;
+        
+        if (!aluguel_id || !numero_parcelas || !primeira_vencimento) {
+            return res.status(400).json({ error: 'Dados incompletos para criar parcelas' });
+        }
+        
+        // Buscar valor total do aluguel
+        db.get('SELECT valor_total FROM alugueis WHERE id = ?', [aluguel_id], (err, row) => {
+            if (err) {
+                console.error('❌ Erro ao buscar valor do aluguel:', err.message);
+                return res.status(500).json({ error: err.message });
+            }
+            
+            if (!row || !row.valor_total) {
+                return res.status(400).json({ error: 'Aluguel sem valor total definido' });
+            }
+            
+            const valorParcela = row.valor_total / numero_parcelas;
+            const vencimentos = [];
+            const primeiraData = new Date(primeira_vencimento);
+            
+            // Gerar datas de vencimento
+            for (let i = 0; i < numero_parcelas; i++) {
+                const dataVencimento = new Date(primeiraData);
+                dataVencimento.setMonth(primeiraData.getMonth() + i);
+                vencimentos.push(dataVencimento.toISOString().split('T')[0]);
+            }
+            
+            // Inserir parcelas
+            const sql = `INSERT INTO pagamentos (aluguel_id, valor, forma_pagamento, data_vencimento, status) 
+                         VALUES (?, ?, ?, ?, 'pendente')`;
+            
+            let inserted = 0;
+            const formasPadrao = ["Dinheiro", "PIX", "Cartão"];
+            
+            vencimentos.forEach((data, index) => {
+                const formaPagamento = formasPadrao[index % formasPadrao.length];
+                
+                db.run(sql, [aluguel_id, valorParcela, formaPagamento, data], function(err) {
+                    if (err) {
+                        console.error('❌ Erro ao criar parcela:', err.message);
+                        return;
+                    }
+                    inserted++;
+                    
+                    if (inserted === numero_parcelas) {
+                        console.log(`✅ ${inserted} parcelas criadas para aluguel ${aluguel_id}`);
+                        res.json({ parcelas_criadas: inserted });
+                    }
+                });
+            });
+        });
     }
 };
 

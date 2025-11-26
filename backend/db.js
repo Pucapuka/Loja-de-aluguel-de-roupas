@@ -73,6 +73,19 @@ function initializeDatabase() {
             FOREIGN KEY (produto_id) REFERENCES produtos(id)
         )`);
 
+            // Tabela para pagamentos fractionados
+        db.run(`CREATE TABLE IF NOT EXISTS pagamentos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            aluguel_id INTEGER NOT NULL,
+            valor REAL NOT NULL,
+            forma_pagamento TEXT NOT NULL,
+            data_vencimento DATE,
+            data_pagamento DATE,
+            status TEXT DEFAULT 'pendente',
+            observacao TEXT,
+            FOREIGN KEY (aluguel_id) REFERENCES alugueis (id) ON DELETE CASCADE
+        )`);
+        
         console.log('✅ Estrutura de tabelas verificada/criada');
         
         // VERIFICAR se precisa inserir dados de exemplo

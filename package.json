@@ -10,7 +10,8 @@
     "dev:electron": "npx electron --no-sandbox electron.js",
     "dev:server": "node backend/server.js",
     "prebuild": "npx tailwindcss -i ./src/input.css -o ./public/output.css --minify && cp src/index.html public/index.html",
-    "build:css": "npx tailwindcss -i ./src/input.css -o ./public/output.css --minify"
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./public/output.css --minify",
+    "instalar": "./criar-pacote.sh && sudo dpkg -i loja-roupas_1.0.3_all.deb"
   },
   "dependencies": {
     "axios": "^1.7.0",

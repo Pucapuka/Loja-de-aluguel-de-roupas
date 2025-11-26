@@ -65,30 +65,58 @@ export default function ListaAlugueis() {
 
   const verDetalhes = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/alugueis/${id}/itens`);
+      const res = await fetch(`http://localhost:5000/api/alugueis/${id}/completo`); // ✅ CORRETO
       
       if (!res.ok) throw new Error("Erro ao carregar detalhes");
       
-      const itens = await res.json();
-      setDetalhesAluguel({ id, itens });
+      const aluguelCompleto = await res.json();
+      setDetalhesAluguel(aluguelCompleto);
     } catch (err) {
       console.error("Erro ao carregar detalhes:", err);
-      alert("Erro ao carregar detalhes: " + err.message);
+      // Tentar a rota antiga como fallback
+      try {
+        const res = await fetch(`http://localhost:5000/api/alugueis/${id}`);
+        if (res.ok) {
+          const aluguelData = await res.json();
+          setDetalhesAluguel(aluguelData);
+        }
+      } catch (fallbackErr) {
+        alert("Erro ao carregar detalhes: " + err.message);
+      }
     }
   };
-
+  
   const finalizarAluguel = async (id) => {
     if (!window.confirm("Deseja finalizar este aluguel?")) return;
     
     try {
       const res = await fetch(`http://localhost:5000/api/alugueis/${id}/finalizar`, { 
-        method: "PUT" 
+        method: "PATCH" 
       });
       
       if (!res.ok) throw new Error("Erro ao finalizar aluguel");
       carregar();
     } catch (err) {
       alert("Erro ao finalizar aluguel: " + err.message);
+    }
+  };
+
+  //Marcar como pago
+  const marcarComoPago = async (pagamentoId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/pagamentos/${pagamentoId}/pagar`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" }
+      });
+      
+      if (!res.ok) throw new Error("Erro ao marcar pagamento como pago");
+      
+      // Recarregar detalhes para atualizar o status
+      if (detalhesAluguel) {
+        verDetalhes(detalhesAluguel.id);
+      }
+    } catch (err) {
+      alert("Erro ao marcar pagamento como pago: " + err.message);
     }
   };
 
@@ -169,57 +197,97 @@ export default function ListaAlugueis() {
       )}
 
       {/* Modal de detalhes */}
-      {detalhesAluguel && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold">Detalhes do Aluguel #{detalhesAluguel.id}</h3>
-              <button 
-                onClick={() => setDetalhesAluguel(null)} 
-                className="text-gray-500 hover:text-gray-700 text-xl"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="space-y-2">
-              {Array.isArray(detalhesAluguel.itens) && detalhesAluguel.itens.length > 0 ? (
-                detalhesAluguel.itens.map((item) => (
-                  <div key={item.item_id} className="flex justify-between items-center p-2 border-b">
-                    <div>
-                      <div className="font-medium">{item.roupa_nome}</div>
-                      <div className="text-sm text-gray-600">
-                        {item.tamanho} - {item.cor}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div>{item.quantidade} x R$ {item.valor_unitario}</div>
-                      <div className="font-bold">R$ {item.total_parcial}</div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center text-gray-500 py-4">
-                  Nenhum item encontrado para este aluguel
-                </div>
-              )}
-              {Array.isArray(detalhesAluguel.itens) && detalhesAluguel.itens.length > 0 && (
-                <div className="flex justify-between items-center p-2 bg-gray-100 rounded font-bold">
-                  <span>TOTAL</span>
-                  <span>R$ {detalhesAluguel.itens[0]?.valor_total || '0.00'}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+{detalhesAluguel && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-bold">Detalhes do Aluguel #{detalhesAluguel.id}</h3>
+        <button 
+          onClick={() => setDetalhesAluguel(null)} 
+          className="text-gray-500 hover:text-gray-700 text-xl"
+        >
+          ✕
+        </button>
+      </div>
+      
+      {/* Informações do cliente */}
+      <div className="mb-6 p-4 bg-gray-50 rounded">
+        <h4 className="font-bold mb-2">Cliente</h4>
+        <p><strong>Nome:</strong> {detalhesAluguel.cliente_nome}</p>
+        <p><strong>Telefone:</strong> {detalhesAluguel.cliente_telefone}</p>
+        <p><strong>Período:</strong> {detalhesAluguel.data_inicio} → {detalhesAluguel.data_fim}</p>
+        <p><strong>Status:</strong> <span className={`px-2 py-1 rounded text-xs ${
+          detalhesAluguel.status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+        }`}>{detalhesAluguel.status}</span></p>
+      </div>
 
-      {/* Lista de aluguéis */}
-      <div className="mt-6 space-y-4">
-        {!carregando && !erro && Array.isArray(alugueis) && alugueis.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
-            Nenhum aluguel encontrado
-          </div>
-        )}
+      {/* Itens do aluguel */}
+      <div className="mb-6">
+        <h4 className="font-bold mb-2">Itens Alugados</h4>
+        <div className="space-y-2">
+          {detalhesAluguel.itens && detalhesAluguel.itens.length > 0 ? (
+            detalhesAluguel.itens.map((item) => (
+              <div key={item.id} className="flex justify-between items-center p-2 border-b">
+                <div>
+                  <div className="font-medium">{item.produto_nome}</div>
+                  <div className="text-sm text-gray-600">
+                    {item.tamanho} - {item.cor} - Qtd: {item.quantidade}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div>{item.quantidade} x R$ {item.valor_unitario}</div>
+                  <div className="font-bold">R$ {item.total_parcial}</div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 py-4">
+              Nenhum item encontrado para este aluguel
+            </div>
+          )}
+          {detalhesAluguel.itens && detalhesAluguel.itens.length > 0 && (
+            <div className="flex justify-between items-center p-2 bg-blue-100 rounded font-bold">
+              <span>TOTAL ITENS</span>
+              <span>R$ {detalhesAluguel.valor_total || '0.00'}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Pagamentos */}
+      <div>
+        <h4 className="font-bold mb-2">Pagamentos</h4>
+        <div className="space-y-2">
+          {detalhesAluguel.pagamentos && detalhesAluguel.pagamentos.length > 0 ? (
+            detalhesAluguel.pagamentos.map((pagamento) => (
+              <div key={pagamento.id} className="flex justify-between items-center p-2 border-b">
+                <div>
+                  <div className="font-medium">R$ {pagamento.valor} - {pagamento.forma_pagamento}</div>
+                  <div className="text-sm text-gray-600">
+                    Vencimento: {pagamento.data_vencimento} 
+                    {pagamento.data_pagamento && ` | Pago em: ${pagamento.data_pagamento}`}
+                    {pagamento.observacao && ` | ${pagamento.observacao}`}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className={`px-2 py-1 rounded text-xs ${
+                    pagamento.status === 'pago' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {pagamento.status}
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 py-4">
+              Nenhum pagamento registrado
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
         {Array.isArray(alugueis) && alugueis.map((a) => (
           <div key={a.id} className="p-4 border rounded-lg bg-white shadow-sm">
@@ -275,6 +343,5 @@ export default function ListaAlugueis() {
           </div>
         ))}
       </div>
-    </div>
   );
 }

@@ -2,23 +2,26 @@ const express = require('express');
 const router = express.Router();
 const aluguelController = require('../controllers/aluguelController');
 
-// Listar aluguéis
+// Listar todos os aluguéis
 router.get('/', aluguelController.listarAlugueis);
 
-// Criar aluguel (cabeçalho)
+// Obter aluguel específico (retorna linhas com item_id quando houver itens)
+router.get('/:id', aluguelController.obterAluguelComItens);
+
+// Obter aluguel completo (itens + pagamentos) - rota utilizada para detalhes
+router.get('/:id/completo', aluguelController.obterAluguelCompleto);
+
+// Criar novo aluguel (cabeçalho)
 router.post('/', aluguelController.criarAluguel);
 
-// Adicionar item ao aluguel
+// Adicionar item ao aluguel (aceita aluguel_id no body)
 router.post('/itens', aluguelController.adicionarItem);
 
-// Obter aluguel com itens
-router.get('/:id/itens', aluguelController.obterAluguelComItens);
-
-// Remover item do aluguel
+// Remover item do aluguel por id do item
 router.delete('/itens/:id', aluguelController.removerItem);
 
 // Finalizar aluguel
-router.put('/:id/finalizar', aluguelController.finalizarAluguel);
+router.patch('/:id/finalizar', aluguelController.finalizarAluguel);
 
 // Deletar aluguel
 router.delete('/:id', aluguelController.deletarAluguel);

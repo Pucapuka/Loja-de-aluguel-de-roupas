@@ -18,6 +18,9 @@ app.use('/api/clientes', clientesRoutes);
 const alugueisRoutes = require('./routes/alugueisRoutes');
 app.use('/api/alugueis', alugueisRoutes);
 
+const pagamentosRoutes = require('./routes/pagamentosRoutes');
+app.use('/api/pagamentos', pagamentosRoutes);
+
 // Rota de informações (opcional - para debug)
 app.get('/api/info', (req, res) => {
     const os = require('os');
