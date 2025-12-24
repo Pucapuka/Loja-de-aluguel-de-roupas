@@ -1,41 +1,7 @@
 import React, { useState, useEffect } from "react";
+import icon from '../../assets/icon.png';
 
 export default function Home() {
-    const [imagePath, setImagePath] = useState('');
-
-    useEffect(() => {
-        // Determinar o caminho correto da imagem de forma simplificada
-        const determineImagePath = () => {
-            // Se estiver em desenvolvimento (web)
-            if (window.location.href.includes('localhost:3000')) {
-                return '/logo.jpeg';
-            }
-            
-            // Se estiver no Electron empacotado
-            if (window.location.protocol === 'file:') {
-                // No Electron, usar caminhos relativos simples
-                const possiblePaths = [
-                    './logo.jpeg',
-                    './public/logo.jpeg',
-                    '../public/logo.jpeg',
-                    '../../public/logo.jpeg',
-                    'logo.jpeg'
-                ];
-                
-                // Retornar o primeiro caminho e confiar no fallback do onError
-                return possiblePaths[0];
-            }
-            
-            return '/logo.jpeg'; // Fallback para web
-        };
-
-        setImagePath(determineImagePath());
-
-        // Debug
-        console.log('📍 URL atual:', window.location.href);
-        console.log('📍 Protocolo:', window.location.protocol);
-        console.log('📍 Caminho da imagem definido para:', determineImagePath());
-    }, []);
     
     return(
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col">
@@ -43,11 +9,11 @@ export default function Home() {
             <div className="text-center py-6 px-4 flex-shrink-0">
                 <div className="flex justify-center mb-4">
                     <img
-                        src={imagePath}
+                        src={icon}
                         alt="Sônia Batista Ateliê"
                         className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 object-contain rounded"
                         onError={(e) => {
-                            console.error('❌ Erro ao carregar imagem:', imagePath);
+                            console.error('❌ Erro ao carregar imagem.');
                             console.log('🔄 Tentando fallback...');
                             
                             // Tentar caminhos alternativos sequencialmente
@@ -76,7 +42,7 @@ export default function Home() {
                             }
                         }}
                         onLoad={() => {
-                            console.log('✅ Imagem carregada com sucesso:', imagePath);
+                            console.log('✅ Imagem carregada com sucesso!');
                         }}
                     />
                 </div>

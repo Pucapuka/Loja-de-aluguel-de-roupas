@@ -1,0 +1,14 @@
+Limpeza Obrigatória:
+
+rm -rf dist
+
+
+Buildar (gerar o /public):
+npm run build:web
+
+Rodar:
+npm run dev:web
+npx tauri:dev
+
+criar pacote .deb:
+npx tauri build

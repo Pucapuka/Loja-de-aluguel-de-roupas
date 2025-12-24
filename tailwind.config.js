@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -19,6 +21,7 @@ module.exports = {
           800: '#1E40AF',
           900: '#1E3A8A',
         },
+        grayCustom: "#F3F4F6",
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -26,5 +29,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
-
+};

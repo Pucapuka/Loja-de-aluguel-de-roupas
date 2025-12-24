@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Loja de Roupas
+Comment=Sistema de aluguel de roupas
+Exec=loja-de-roupas
+Icon=loja-de-roupas
+Terminal=false
+Type=Application
+Categories=Office;
+StartupNotify=true

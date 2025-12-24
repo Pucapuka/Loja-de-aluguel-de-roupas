@@ -1,9 +1,9 @@
 import React from "react";
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./components/Layout/NavBar";
+import Navbar from "./components/Layout/NavBar.jsx";
 import ListaProdutos from "./components/Produtos/ListaProdutos.jsx";
-import ListaClientes from "./components/Clientes/ListaClientes";
-import ListaAlugueis from "./components/Alugueis/ListaAlugueis";
+import ListaClientes from "./components/Clientes/ListaClientes.jsx";
+import ListaAlugueis from "./components/Alugueis/ListaAlugueis.jsx";
 import Home from "./components/Home/Home.jsx";
 
 export default function App() {

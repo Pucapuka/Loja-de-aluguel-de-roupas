@@ -1,142 +1,136 @@
-# App Generalista para uma Loja de Roupas
-Desenvolvido para ambiente Linux (dist. Debian), usando tecnologias para desenvolvimento web, com pacotes de instaladores e builders. Essa estrutura já foi testada e consegue gerar um instalável para SO Linux debian.
+# 👗 Loja de Aluguel de Roupas — Aplicativo Desktop
 
-## Estrutura do aplicativo
+Aplicativo desktop para gestão de uma loja de aluguel de roupas, desenvolvido com tecnologias web modernas e empacotado como aplicação nativa Linux (Debian/Ubuntu).
+
+O sistema permite gerenciar produtos, clientes, aluguéis e pagamentos, com persistência local via banco de dados SQLite.
+
+# 🧠 Visão Geral da Arquitetura
+
+O projeto segue uma arquitetura desktop híbrida, composta por:
+
+- Frontend em React (SPA)
+- Backend local em Express (Node.js)
+- Banco de dados local SQLite
+- Shell desktop e empacotamento via Tauri (Rust)
+
+Todo o sistema roda offline, sem dependência de servidores externos.
+
+# 📁 Estrutura do Projeto
+
 ```bash
 lojaDeRoupas
-├── backend
-│   ├── database
-│   │   ├── databaseCode.txt
-│   │   ├── loja.db
-│   │   └── setup.sql
+├── backend                # Backend Express + SQLite
+│   ├── controllers
 │   ├── routes
-│   │   ├── alugueis.js
-│   │   ├── clientes.js
-│   │   └── roupas.js
-│   ├── db.js
-│   └── server.js
-├── debian
-│   ├── changelog
-│   ├── control
-│   ├── postinst
-│   └── prerm
-├── instaladores
-│   ├── criar-appimage.sh
-│   ├── criar-deb.sh
-│   └── instalar-gui.sh
-├── public
-│   ├── bundle.js
-│   ├── bundle.js.LICENSE.txt
-│   └── index.html
-├── scripts
-├── src
+│   ├── database
+│   └── utils
+├── public                 # Build final do frontend
+├── src                    # Frontend React
+│   ├── assets
 │   ├── components
-│   │   ├── Alugueis
-│   │   ├── Clientes
-│   │   ├── Layout
-│   │   └── Roupas
-│   ├── services
-│   │   └── api.js
-│   ├── App.jsx
-│   ├── index.css
-│   └── index.js
-├── usr
-│   ├── local
-│   │   └── loja-roupas
-│   └── share
-│       └── applications
-├── criar-pacote.sh
-├── electron.js
-├── install.sh
-├── jest.config.js
-├── jest.setup.js
-├── loja-roupas_1.0.3_all.deb
-├── package.json
-├── package-lock.json
-├── postcss.config.js
-├── README.md
-├── Requisitos.md
-├── tailwind.config.js
-└── webpack.config.js
+│   └── services
+├── src-tauri              # Aplicação Tauri (Rust)
+│   ├── icons
+│   ├── src
+│   └── target             # Artefatos de build (ignorado no Git)
+└── README.md
 ```
 
-## Descrição
+# 🛠 Tecnologias Utilizadas
 
-O app foi desenvolvido utilizando:
+## Desktop / Build
 
-### Electron
- Esta ferramenta inicializa o app (cria janela desktop).
+- Tauri 2.x — Shell desktop, segurança e empacotamento
+- Rust — Core da aplicação Tauri
 
-### React 
-Biblioteca para trabalhar a exibição da interface (cadastro, listas, relatórios etc.).
+## Frontend
 
-### Express 
-Framework JavaScript que roda embutido dentro do Electron (como backend local).
+- React 18
+- Webpack
+- Tailwind CSS
 
-### SQLite 
-Sistema de Gerenciamento de Banco de Dados, que armazena os dados localmente (loja.db).
+## Backend
+
+- Node.js
+- Express
+- SQLite
 
 
-# 👗 Sistema de Aluguel de Roupas (Desktop)
+# 🚀 Execução em Ambiente de Desenvolvimento
 
-Aplicativo desktop desenvolvido com **Electron + React + Express + SQLite**.
+## Pré-requisitos
 
----
+- Node.js 18+
+- Rust (toolchain estável)
+- Dependências do Tauri (ver documentação oficial)
 
-## 🚀 Como rodar
-
-1. Instale as dependências:
+## Instalar Dependências
 ```bash
    npm install
 ```
-2. Execute o app:
+## Rodar backend + frontend (mode web):
 ```bash
-    npm start
+    npm run dev
 ```
 Isso iniciará:
 
 - Servidor backend (Express + SQLite)
+- Frontend React via Webpack Dev Server
 
-- Interface React
+Para acessá-los:
 
-- Janela desktop do Electron
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000
 
-3. Banco de dados:
-
-- O arquivo SQLite é criado automaticamente em backend/database/loja.db.
-
-## 📦 Build (gerar instalador)
-
-Para gerar o instalador (ex: .exe), adicione o **electron-builder** :
+## Rodar como aplicativo desktop
 
 ```bash
-npm install --save-dev electron-builder
-```
-E no package.json:
-
-```json
-"build": {
-  "appId": "com.loja.aluguel.roupas",
-  "productName": "Loja de Aluguel de Roupas",
-  "directories": { "output": "dist" }
-}
+npx tauri dev
 ```
 
-Depois:
+# 🗄 Banco de Dados
+O banco SQLite é criado automaticamente em:
 ```bash
-npx electron-builder
+backend/database/loja.db.
 ```
+Não é necessário nenhum setup manual.
 
-# Empacotamento (Para Dist Debian)
-
-## Loja de Roupas - Empacotamento
-
-### Para gerar o pacote .deb:
+## Rodar como aplicativo desktop (Tauri)
 
 ```bash
-# Tornar executável
-chmod +x criar-pacote.sh
-
-# Gerar pacote
-./criar-pacote.sh
+npx tauri dev
 ```
+
+# 📦 Build e Geração do Instalador (.deb)
+
+Para gerar o instalador Linux (Debian/Ubuntu):
+
+```bash
+npx tauri build
+```
+
+O pacote .deb será gerado em:
+
+```bash
+src-tauri/target/release/bundle/deb/
+```
+
+## Instalação do Pacote
+Após o build:
+
+```bash
+sudo dpkg -i loja-aluguel-roupas_*.deb
+```
+
+# 📄 Licença
+
+Este projeto é de uso educacional e/ou interno.
+Defina uma licença (MIT, GPL, etc.) conforme a finalidade do projeto.
+
+# 📌 Status do Projeto
+
+✔ Funcional
+✔ Instalável via .deb
+✔ Backend embutido
+✔ Persistência local
+✔ Pronto para uso offline
