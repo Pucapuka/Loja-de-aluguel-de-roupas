@@ -1,23 +1,44 @@
-use std::process::Command;
-use tauri::{Manager, path::BaseDirectory};
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+mod db;
+mod produtos;
+mod clientes;
+mod alugueis;
+mod pagamentos;
+
+use tauri::{Manager};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  tauri::Builder::default()
-    .setup(|app| {
+    tauri::Builder::default()
+        .setup(|app| {
+            // Inicializa banco e registra como estado
+            let db_state = db::init_db(app.handle().clone());
+            app.manage(db_state);
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            // Produtos
+            produtos::listar_produtos,
+            produtos::criar_produto,
+            produtos::obter_produto,
+            produtos::atualizar_produto,
+            produtos::deletar_produto,
 
-      let backend_path = app
-        .path()
-        .resolve("backend/server.js", BaseDirectory::Resource)
-        .expect("failed to resolve backend path");
+            // Clientes
+            clientes::listar_clientes,
+            clientes::criar_cliente,
+            clientes::atualizar_cliente,
+            clientes::deletar_cliente,
 
-      Command::new("node")
-        .arg(backend_path)
-        .spawn()
-        .expect("failed to start backend");
+            // Aluguéis
+            alugueis::listar_alugueis,
+            alugueis::criar_aluguel,
 
-      Ok(())
-    })
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+            // Pagamentos
+            pagamentos::listar_pagamentos,
+            pagamentos::criar_pagamento,
+        ])
+        .run(tauri::generate_context!())
+        .expect("Erro ao executar aplicação Tauri");
 }

@@ -6,7 +6,7 @@
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3000", 
-    "beforeBuildCommand": "npm run build:web"
+    "beforeBuildCommand": "bash src-tauri/before-build.sh"
   },
   "app": {
     "windows": [
