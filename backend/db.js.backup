@@ -11,7 +11,7 @@ let dbPath;
 
 if (isDocker) {
     // DOCKER: usar /data (volume persistente)
-    dbPath = process.env.DB_PATH || '/home/nodejs/data/loja.db';
+    dbPath = '/data/loja.db';
     console.log('🐳 Ambiente Docker: Banco em /data/loja.db');
 } else {
     // LOCAL: usar home do usuário

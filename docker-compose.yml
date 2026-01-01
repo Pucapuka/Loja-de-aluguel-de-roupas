@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    image: pauloandersonlima/loja-roupas:v1.6  # ← VERSAÃO CORRIGIDA
+    container_name: loja-aluguel-roupas
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/home/nodejs/data               # ← VOLUME CORRETO
+    environment:
+      - DB_PATH=/home/nodejs/data/loja.db      # ← VARIÁVEL DE AMBIENTE
+    restart: unless-stopped

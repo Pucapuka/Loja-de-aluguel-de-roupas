@@ -1,52 +1,69 @@
-# Node
+############################
+# Node / Frontend
+############################
 node_modules/
 .npm/
 
-# Frontend build
 dist/
 build/
 out/
 
-# Env
+############################
+# Environment
+############################
 .env
 .env.*
 !.env.example
 
+############################
 # Logs
+############################
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 
-# IDE
+############################
+# IDE / Editor
+############################
 .vscode/
 .idea/
 *.swp
 *.swo
 
+############################
 # OS
+############################
 .DS_Store
 Thumbs.db
 
+############################
 # Tauri / Rust
+############################
 src-tauri/target/
 src-tauri/gen/
 src-tauri/bundle/
-src-tauri/capabilities
 
+# Rust build artifacts
+target/
 
-# Webpack / Tooling cache
+############################
+# Tooling cache
+############################
 .cache/
 .parcel-cache/
 .webpack-cache/
 
-
+############################
 # Tauri temp
+############################
 src-tauri/.tauri/
 src-tauri/.cargo/
 
-# Binários
+############################
+# Binaries / Installers
+############################
 *.exe
 *.dll
 *.so
@@ -55,17 +72,3 @@ src-tauri/.cargo/
 *.deb
 *.rpm
 *.msi
-
-# Logs e cache Rust
-target/
-Cargo.lock
-
-# Builds Desktop (Tauri / Electron)
-dist/
-dist-electron/
-src-tauri/target/
-*.AppImage
-*.deb
-*.rpm
-*.exe
-usr/*
