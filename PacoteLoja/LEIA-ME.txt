@@ -1,0 +1,10 @@
+=== LOJA DE ROUPAS - INSTALAÇÃO RÁPIDA ===
+
+COMO INSTALAR:
+1. Extraia esta pasta
+2. Clique com o botão direito do mouse sobre a pasta e, em seguida, clique em "abrir no terminal".
+3. No terminal Execute: sudo bash INSTALAR-DOCKERHUB.sh (pode ser que peça a senha).
+4. Dê Logout no seu sistema e, depois, Login.
+5. Acesse: http://localhost:5000
+
+Só isso! A loja virá pronta do Docker Hub.
