@@ -189,7 +189,7 @@ export default function ListaProdutos() {
                     <tr key={produto.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium text-gray-900">{produto.nome}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">{produto.codigo || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">R$ {produto.preco?.toFixed(2) || '0.00'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">R$ {produto.preco_aluguel?.toFixed(2) || '0.00'}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">{produto.estoque ?? 0}</td>
                       <td className="px-4 py-3 flex gap-2">
                         <button onClick={() => handleEditar(produto)} className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded hover:bg-yellow-500 transition-colors text-sm font-medium">Editar</button>

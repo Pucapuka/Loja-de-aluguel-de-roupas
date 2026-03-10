@@ -163,7 +163,7 @@ export default function ListaClientes() {
               placeholder="Buscar por nome, CPF, email ou telefone..."
               value={filtro}
               onChange={(e) => setFiltro(e.target.value)}
-              className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>

@@ -154,7 +154,7 @@ export default function FormClientes({ onSave, editar }) {
             value={form.nome} 
             onChange={handleChange} 
             required 
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            className="border p-2 rounded w-full focus:ring-2 text-black focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
         <div>
@@ -165,7 +165,7 @@ export default function FormClientes({ onSave, editar }) {
             value={form.cpf}
             onChange={handleChange}
             maxLength="14"
-            className={`border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+            className={`border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
               !cpfValido && form.cpf ? 'border-red-500 bg-red-50' : ''
             }`}
           />
@@ -180,7 +180,7 @@ export default function FormClientes({ onSave, editar }) {
             placeholder="(00) 00000-0000" 
             value={form.telefone} 
             onChange={handleChange} 
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
           />
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function FormClientes({ onSave, editar }) {
           placeholder="email@exemplo.com" 
           value={form.email} 
           onChange={handleChange} 
-          className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
         />
       </div>
 
@@ -205,7 +205,7 @@ export default function FormClientes({ onSave, editar }) {
           value={form.endereco} 
           onChange={handleChange} 
           rows="3"
-          className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" 
+          className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" 
         />
       </div>
 

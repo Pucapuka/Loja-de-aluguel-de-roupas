@@ -119,9 +119,8 @@ export default function FormProdutos({ onSave, editar }) {
             value={form.codigo} 
             onChange={handleChange} 
             required 
-            className="border p-2 rounded w-full font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
+            className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
             placeholder="Código do produto"
-            style={{ color: 'black' }}
           />
         </div>
         <div>
@@ -131,9 +130,8 @@ export default function FormProdutos({ onSave, editar }) {
             value={form.nome} 
             onChange={handleChange} 
             required 
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
+            className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
             placeholder="Nome do produto"
-            style={{ color: 'black' }}
           />
         </div>
       </div>
@@ -145,9 +143,8 @@ export default function FormProdutos({ onSave, editar }) {
             name="tamanho" 
             value={form.tamanho} 
             onChange={handleChange} 
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
+            className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
             placeholder="Ex: P, M, G, GG"
-            style={{ color: 'black' }}
           />
         </div>
         <div>
@@ -156,9 +153,8 @@ export default function FormProdutos({ onSave, editar }) {
             name="cor" 
             value={form.cor} 
             onChange={handleChange} 
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
+            className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
             placeholder="Ex: Vermelho, Azul, Preto"
-            style={{ color: 'black' }}
           />
         </div>
         <div>
@@ -169,9 +165,8 @@ export default function FormProdutos({ onSave, editar }) {
             min="0" 
             value={form.estoque} 
             onChange={handleChange} 
-            className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
+            className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
             placeholder="Quantidade em estoque"
-            style={{ color: 'black' }}
           />
         </div>
       </div>
@@ -185,9 +180,8 @@ export default function FormProdutos({ onSave, editar }) {
           min="0" 
           value={form.preco_aluguel} 
           onChange={handleChange} 
-          className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
+          className="border p-2 rounded w-full text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 placeholder:text-gray-600"
           placeholder="0.00"
-          style={{ color: 'black' }}
         />
       </div>
 
